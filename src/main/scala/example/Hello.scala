@@ -6,6 +6,7 @@ import breeze.stats.mean
 
 object Hello extends App {
   type Matrix = DenseMatrix[Double]
+  type MatrixList = List[Matrix]
   def sigmoid(x: Matrix): Matrix = 1.0 / (exp(-x) + 1.0)
   def sigmoidDerivation(x: Matrix): Matrix = x :* (1.0 - x)
   def fillByRandom(empty: Matrix): Matrix = empty * 2.0 - 1.0
@@ -18,17 +19,28 @@ object Hello extends App {
     (1.0, 1.0, 1.0)
   )
 
-  val N = "Neurons"
-  val R = "Run"
-
   val y = DenseMatrix(0.0, 1.0, 1.0, 0.0)
+
+//      ◯
+//  ◯   ◯
+//  ◯   ◯   ◯
+//  ◯   ◯
+
+  val E = 60000
+  val R = 4
+  var S: MatrixList = List(3, 4, 1).init.zip(List(3, 4, 1).tail).map(l => createRandomMatrix(l._1, l._2))
+  var L: MatrixList = List()
+
   var syn0 = createRandomMatrix(3, 4)
   var syn1 = createRandomMatrix(4, 1)
 
   var i = 1
-  while (i < 60000) {
-    val l0 = X
+  while (i < E) {
 
+    L = S.foldLeft(List(X))((l: MatrixList, s: Matrix) => l :+ sigmoid(l.last * s))
+
+
+    val l0 = X
     val l1 = sigmoid(l0 * syn0)
     val l2 = sigmoid(l1 * syn1)
 
