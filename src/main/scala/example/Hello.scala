@@ -21,34 +21,41 @@ object Hello extends App {
 
   val y = DenseMatrix(0.0, 1.0, 1.0, 0.0)
 
-//      ◯
-//  ◯   ◯
-//  ◯   ◯   ◯
-//  ◯   ◯
+//  L0     L1     L2
+//         ◯
+//  ◯      ◯
+//  ◯  S1  ◯  S2  ◯
+//  ◯      ◯
 
-  val E = 60000
-  val R = 4
+  // val E = 60000
+  // val R = 4
   var S: MatrixList = List(3, 4, 1).init.zip(List(3, 4, 1).tail).map(l => createRandomMatrix(l._1, l._2))
   var L: MatrixList = List()
 
   var syn0 = createRandomMatrix(3, 4)
   var syn1 = createRandomMatrix(4, 1)
 
-  var i = 1
-  while (i < E) {
+  // var i = 1
+  // while (i < E) {
 
     L = S.foldLeft(List(X))((l: MatrixList, s: Matrix) => l :+ sigmoid(l.last * s))
 
+
+    def delta(prev: Matrix, next: Matrix): Matrix = {
+      val error = next - prev
+      error :* sigmoidDerivation(prev)
+    }
 
     val l0 = X
     val l1 = sigmoid(l0 * syn0)
     val l2 = sigmoid(l1 * syn1)
 
-    val l2_error = y - l2
-    if (i % 10000 == 0) {
-      println("Error:" + mean(abs(l2_error)))
-    }
 
+    // if (i % 10000 == 0) {
+    //   println("Error:" + mean(abs(l2_error)))
+    // }
+
+    val l2_error = y - l2
     val l2_delta = l2_error :* sigmoidDerivation(l2)
 
     val l1_error = l2_delta * syn1.t
@@ -57,8 +64,8 @@ object Hello extends App {
     syn1 += l1.t * l2_delta
     syn0 += l0.t * l1_delta
 
-    i += 1
-  }
+    // i += 1
+  // }
 
   println("-------------------------------------")
   println(syn0)
