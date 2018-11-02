@@ -38,6 +38,51 @@ object Hello extends App {
 // S1 = S1 + L1 * L2_norm
 // S0 = S0 + L0 * L1_norm
 
+
+
+//     L0     L1     L2     L3     L4     L5
+//
+//            ◯
+//     ◯      ◯      ◯      ◯      ◯
+//     ◯  S0  ◯  S1  ◯  S2  ◯  S3  ◯  S4  ◯
+//     ◯      ◯      ◯      ◯      ◯
+//            ◯      ◯
+//
+//     X                                  y
+//
+//
+//    L5_error = y - L5
+//    L5_norm  = L5_error * sigmoid'(L5)
+//
+//    L4_error = L5_norm * S4
+//    L4_norm  = L4_error * sigmoid'(L4)
+//
+//    L3_error = L4_norm * S3
+//    L3_norm  = L3_error * sigmoid'(L3)
+//
+//    L2_error = L3_norm * S2
+//    L2_norm  = L2_error * sigmoid'(L2)
+//
+//    L1_error = L2_norm * S1
+//    L1_norm  = L1_error * sigmoid'(L1)
+//
+//
+//    L0  | L1       | L2       | L3       | L4       | L5
+//        | L1_error | L2_error | L3_error | L4_error | L5_error
+//        | L1_norm  | L2_norm  | L3_norm  | L4_norm  | L5_norm
+//    S0  | S1       | S2       | S3       | S4       |
+//
+//
+//    S4 = S4 + L4 * L5_norm
+//    S3 = S3 + L3 * L4_norm
+//    S2 = S2 + L2 * L3_norm
+//    S1 = S1 + L1 * L2_norm
+//    S0 = S0 + L0 * L1_norm
+//
+//
+//
+
+
   // val E = 60000
   // val R = 4
   var S: MatrixList = List(3, 4, 1).init.zip(List(3, 4, 1).tail).map(l => createRandomMatrix(l._1, l._2))
