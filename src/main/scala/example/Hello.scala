@@ -88,7 +88,7 @@ object Hello extends App {
   var syn0 = createRandomMatrix(3, 4)
   var syn1 = createRandomMatrix(4, 1)
 
-  def directDistribution(x: Matrix, s: MatrixList, normalizer: Matrix => Matrix): MatrixList =
+  def forwardPropagation(x: Matrix, s: MatrixList, normalizer: Matrix => Matrix): MatrixList =
     (List(x) /: s) {
       (l: MatrixList, s: Matrix) => l :+ normalizer(l.last * s)
     }
