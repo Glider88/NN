@@ -11,7 +11,7 @@ object Hello extends App {
   def fillByRandom(empty: Matrix): Matrix = empty * 2.0 - 1.0
   def createRandomMatrix(rows: Int, cols: Int): Matrix = fillByRandom(DenseMatrix.rand(rows, cols))
 
-  val X = DenseMatrix(
+  val X: Matrix = DenseMatrix(
     (0.0, 0.0, 1.0),
     (0.0, 1.0, 1.0),
     (1.0, 0.0, 1.0),
@@ -93,21 +93,47 @@ object Hello extends App {
       (l: MatrixList, s: Matrix) => l :+ normalizer(l.last * s)
     }
 
-//  L = directDistribution(X, S, sigmoid)
-//
-//  var S_ext: MatrixList = S :+ (y - L.last)
-//
-//  val R = (L zip S_ext).foldRight(List.empty[Matrix]) {
-//    (L_S, L_norm) => {
-//      L_norm match {
-//        case Nil => (L_S._2 *:* sigmoidDerivation(L_S._1)) :: L_norm
-//        case L_norm => {
-//          val l_err = L_norm.last * L_S._2.t
-//          (l_err * sigmoidDerivation(L_S._1)) :: L_norm
-//        }
-//      }
-//    }
-//  }
+  L = forwardPropagation(X, S, sigmoid)
+
+  var S_ext: MatrixList = S :+ (y - L.last)
+
+  //    L5_norm  = (y - L5)       *:* sigmoid'(L5)
+  //    L4_norm  = (L5_norm * S4) *:* sigmoid'(L4)
+  //    L3_norm  = (L4_norm * S3) *:* sigmoid'(L3)
+  //    L2_norm  = (L3_norm * S2) *:* sigmoid'(L2)
+  //    L1_norm  = (L2_norm * S1) *:* sigmoid'(L1)
+
+  def backPropagationDelta(l: MatrixList, y: Matrix, s: MatrixList, normalizer: Matrix => Matrix): MatrixList = {
+    val s_ext = s :+ (y - l.last)
+    ((l zip s_ext) :\ List.empty[Matrix]) {
+      (l_s: (Matrix, Matrix), l_norm: MatrixList) => {
+        val ln = l_s._1
+        val sn = l_s._2
+        l_norm match {
+          case Nil => List(sn *:* normalizer(ln))
+          case l_norm =>
+            val l_err = l_norm.last * sn.t
+            l_norm :+ (l_err *:* normalizer(ln))
+        }
+      }
+    }
+  }
+
+  //    S4 = S4 + L4 * L5_norm
+  //    S3 = S3 + L3 * L4_norm
+  //    S2 = S2 + L2 * L3_norm
+  //    S1 = S1 + L1 * L2_norm
+  //    S0 = S0 + L0 * L1_norm
+
+  def updateSyn(s: MatrixList, l: MatrixList, l_delta: MatrixList): MatrixList =
+    (s, l.tail, l_delta.reverse.tail).zipped.toList.map(sll => sll._1 + sll._2 * sll._3)
+
+  def dim(ml: MatrixList): List[String] = ml.map(m => s"${m.rows}x${m.cols}")
+
+  val L_norm = backPropagationDelta(L, y, S, sigmoidDerivation)
+  val S_ = updateSyn(S, L, L_norm)
+  println(S_)
+
 //
 //  val l0 = X
 //  val l1 = sigmoid(l0 * syn0)
@@ -140,7 +166,7 @@ object Hello extends App {
 //  val L2_ERR = S2
 //  val L2_DEL = L2_ERR *:* sigmoidDerivation(L2)
 //
-//  val L1_ERR = L2_DEL * S2.t
+//  val L1_ERR = L2_DEL * S1.t
 //  val L1_DEL = L1_ERR *:* sigmoidDerivation(L1)
 //
 //  println("-------------------------------------")
