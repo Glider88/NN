@@ -143,7 +143,7 @@ object Hello extends App {
 //  val l2_delta = l2_error *:* sigmoidDerivation(l2)
 //
 //  val l1_error = l2_delta * syn1.t
-//  val l1_delta = l1_error * sigmoidDerivation(l1)
+//  val l1_delta = l1_error *:* sigmoidDerivation(l1)
 //
 //  syn1 += l1.t * l2_delta
 //  syn0 += l0.t * l1_delta
