@@ -126,7 +126,7 @@ object Hello extends App {
   //    S0 = S0 + L0 * L1_norm
 
   def updateSyn(s: MatrixList, l: MatrixList, l_delta: MatrixList): MatrixList =
-    (s, l.tail, l_delta.reverse.tail).zipped.toList.map(sll => sll._1 + sll._2 * sll._3)
+    (s, l.init, l_delta.tail).zipped.toList.map(sll => sll._1 + sll._2.t * sll._3)
 
   def dim(ml: MatrixList): List[String] = ml.map(m => s"${m.rows}x${m.cols}")
 

@@ -205,4 +205,60 @@ class HelloSpec extends FlatSpec with Matchers {
 
     result should be (expected)
   }
+
+  it should("work updating syn") in {
+    val l0 = DenseMatrix(
+      (1.0, 0.0),
+    )
+
+    val l1 = DenseMatrix(
+      (1.0, 0.0, 1.0),
+    )
+
+    val l2 = DenseMatrix(
+      (1.0),
+    )
+
+    val s0: Matrix = DenseMatrix(
+      (1.0, 1.0, 1.0),
+      (1.0, 1.0, 1.0),
+    )
+
+    val s1: Matrix = DenseMatrix(
+      (1.0),
+      (1.0),
+      (1.0),
+    )
+
+    val l0_delta = DenseMatrix(
+      (2.0, 1.0),
+    )
+
+    val l1_delta = DenseMatrix(
+      (2.0, 2.0, 2.0),
+    )
+
+    val l2_delta = DenseMatrix(
+      (2.0),
+    )
+
+    //    s1 = s1 + l1.T *:* l2_delta
+    //    s0 = s0 + l0.T *:* l1_delta
+
+    val result = Hello.updateSyn(List(s0, s1), List(l0, l1, l2), List(l0_delta, l1_delta, l2_delta))
+
+    val expected = List(
+      DenseMatrix(
+        (3.0, 3.0, 3.0),
+        (1.0, 1.0, 1.0),
+      ),
+      DenseMatrix(
+        (3.0),
+        (1.0),
+        (3.0),
+      )
+    )
+
+    result should be (expected)
+  }
 }
