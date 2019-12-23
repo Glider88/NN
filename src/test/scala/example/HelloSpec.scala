@@ -184,10 +184,10 @@ class HelloSpec extends FlatSpec with Matchers {
 
     val expected = List(
       DenseMatrix(
-        (  0.0),
-        ( -9.0),
-        ( -9.0),
-        (-36.0),
+        (   0.0,    0.0),
+        ( -27.0,    0.0),
+        (   0.0,  -27.0),
+        (-216.0, -216.0),
       ),
       DenseMatrix(
         (  0.0,   0.0,   0.0),
@@ -196,10 +196,10 @@ class HelloSpec extends FlatSpec with Matchers {
         (-72.0, -72.0, -72.0),
       ),
       DenseMatrix(
-        (   0.0,    0.0),
-        ( -27.0,    0.0),
-        (   0.0,  -27.0),
-        (-216.0, -216.0),
+        (  0.0),
+        ( -9.0),
+        ( -9.0),
+        (-36.0),
       ),
     )
 

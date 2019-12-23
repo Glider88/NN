@@ -116,7 +116,7 @@ object Hello extends App {
             l_norm :+ (l_err *:* normalizer(ln))
         }
       }
-    }
+    }.reverse
   }
 
   //    S4 = S4 + L4 * L5_norm
