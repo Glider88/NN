@@ -1,7 +1,7 @@
 package example
 
 import breeze.linalg.DenseMatrix
-import example.Hello.Matrix
+import example.Matrix.Matrix
 import org.scalatest._
 
 class HelloSpec extends FlatSpec with Matchers {
@@ -54,7 +54,7 @@ class HelloSpec extends FlatSpec with Matchers {
       2 2 2                12          6
     */
 
-    val result = Hello.forwardPropagation(x, List(s0, s1), halve)
+    val result = NeuralNetwork.forwardPropagation(x, List(s0, s1), halve)
     val expected = List(
       DenseMatrix(
         (0.0, 0.0),
@@ -88,21 +88,21 @@ class HelloSpec extends FlatSpec with Matchers {
     //
     //     X             y
 
-    val l0 = DenseMatrix(
+    val l0: Matrix = DenseMatrix(
       (0.0, 0.0),
       (1.0, 0.0),
       (0.0, 1.0),
       (1.0, 1.0),
     )
 
-    val l1 = DenseMatrix(
+    val l1: Matrix = DenseMatrix(
       (0.0, 0.0, 0.0),
       (1.0, 1.0, 1.0),
       (1.0, 1.0, 1.0),
       (2.0, 2.0, 2.0),
     )
 
-    val l2 = DenseMatrix(
+    val l2: Matrix = DenseMatrix(
       (0.0),
       (3.0),
       (3.0),
@@ -120,7 +120,7 @@ class HelloSpec extends FlatSpec with Matchers {
       (1.0),
     )
 
-    val y = DenseMatrix(
+    val y: Matrix = DenseMatrix(
       (0.0),
       (0.0),
       (0.0),
@@ -180,7 +180,7 @@ class HelloSpec extends FlatSpec with Matchers {
 
     def id(x: Matrix): Matrix = x
 
-    val result = Hello.backPropagationDelta(List(l0, l1, l2), y, List(s0, s1), id)
+    val result = NeuralNetwork.backPropagationDelta(List(l0, l1, l2), y, List(s0, s1), id)
 
     val expected = List(
       DenseMatrix(
@@ -207,15 +207,15 @@ class HelloSpec extends FlatSpec with Matchers {
   }
 
   it should("work updating syn") in {
-    val l0 = DenseMatrix(
+    val l0: Matrix = DenseMatrix(
       (1.0, 0.0),
     )
 
-    val l1 = DenseMatrix(
+    val l1: Matrix = DenseMatrix(
       (1.0, 0.0, 1.0),
     )
 
-    val l2 = DenseMatrix(
+    val l2: Matrix = DenseMatrix(
       (1.0),
     )
 
@@ -230,22 +230,22 @@ class HelloSpec extends FlatSpec with Matchers {
       (1.0),
     )
 
-    val l0_delta = DenseMatrix(
+    val l0_delta: Matrix = DenseMatrix(
       (2.0, 1.0),
     )
 
-    val l1_delta = DenseMatrix(
+    val l1_delta: Matrix = DenseMatrix(
       (2.0, 2.0, 2.0),
     )
 
-    val l2_delta = DenseMatrix(
+    val l2_delta: Matrix = DenseMatrix(
       (2.0),
     )
 
     //    s1 = s1 + l1.T *:* l2_delta
     //    s0 = s0 + l0.T *:* l1_delta
 
-    val result = Hello.updateSyn(List(s0, s1), List(l0, l1, l2), List(l0_delta, l1_delta, l2_delta))
+    val result = NeuralNetwork.updateSyn(List(s0, s1), List(l0, l1, l2), List(l0_delta, l1_delta, l2_delta))
 
     val expected = List(
       DenseMatrix(
